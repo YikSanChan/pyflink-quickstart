@@ -1,12 +1,10 @@
-from pyflink.table import BatchTableEnvironment, EnvironmentSettings
-from pyflink.table.descriptors import Schema, OldCsv, FileSystem
-from pyflink.table.expressions import lit
+from pyflink.table import EnvironmentSettings, BatchTableEnvironment
 
 # https://ci.apache.org/projects/flink/flink-docs-release-1.12/dev/python/table_api_tutorial.html
 
-table_env = BatchTableEnvironment.create(environment_settings=EnvironmentSettings.new_instance()
-    .in_batch_mode().use_blink_planner().build())
-table_env._j_tenv.getPlanner().getExecEnv().setParallelism(1)
+env_settings = EnvironmentSettings.new_instance().in_batch_mode().use_blink_planner().build()
+table_env = BatchTableEnvironment.create(environment_settings=env_settings)
+table_env.get_config().get_configuration().set_string("parallelism.default", "1")
 
 my_source_ddl = """
     create table mySource (
@@ -29,10 +27,15 @@ my_sink_ddl = """
     )
 """
 
-table_env.sql_update(my_source_ddl)
-table_env.sql_update(my_sink_ddl)
+transform_dml = """
+INSERT INTO mySink
+SELECT word, COUNT(1) FROM mySource GROUP BY word
+"""
 
-tab = table_env.from_path('mySource')
-tab.group_by(tab.word) \
-   .select(tab.word, lit(1).count) \
-   .execute_insert('mySink').wait()
+table_env.execute_sql(my_source_ddl)
+table_env.execute_sql(my_sink_ddl)
+table_env.execute_sql(transform_dml).wait()
+
+# before run: echo -e  "flink\npyflink\nflink" > /tmp/input
+# after run: cat /tmp/output
+
