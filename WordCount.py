@@ -3,6 +3,8 @@ from pyflink.table import TableConfig, DataTypes, BatchTableEnvironment
 from pyflink.table.descriptors import Schema, OldCsv, FileSystem
 from pyflink.table.expressions import lit
 
+# https://ci.apache.org/projects/flink/flink-docs-release-1.12/dev/python/table_api_tutorial.html
+
 exec_env = ExecutionEnvironment.get_execution_environment()
 exec_env.set_parallelism(1)
 t_config = TableConfig()
