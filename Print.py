@@ -13,9 +13,7 @@ table_env.execute_sql("""
         data STRING
     ) WITH (
         'connector' = 'datagen',
-        'fields.id.kind' = 'sequence',
-        'fields.id.start' = '1',
-        'fields.id.end' = '10'
+        'rows-per-second' = '1'
     )
 """)
 
@@ -32,7 +30,7 @@ table_env.execute_sql("""
 # 4. query from source table and perform caculations
 source_table = table_env.from_path("datagen") # same as table_env.sql_query("SELECT * FROM datagen")
 
-result_table = source_table.select(source_table.id + 1, source_table.data)
+result_table = source_table.select(source_table.id, source_table.data)
 
 # Uncomment the below command to print a pandas DataFrame
 # print(result_table.to_pandas())
