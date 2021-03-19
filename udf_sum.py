@@ -12,7 +12,7 @@ def add(i, j):
 env = StreamExecutionEnvironment.get_execution_environment()
 t_env = StreamTableEnvironment.create(env)
 
-t_env.register_function("add", add)
+t_env.create_temporary_function("add", add)
 
 my_source_ddl = """
 create table mySource (
@@ -41,5 +41,3 @@ from mySource
 t_env.execute_sql(my_source_ddl)
 t_env.execute_sql(my_sink_ddl)
 t_env.execute_sql(my_transform_dml).wait()
-# t_env.from_path("mySource").select("add(a,b)").insert_into("mySink")
-# t_env.execute("Sum")
