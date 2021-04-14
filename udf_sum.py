@@ -5,7 +5,7 @@ from pyflink.table.udf import udf
 # https://flink.apache.org/2020/04/09/pyflink-udf-support-flink.html
 # https://ci.apache.org/projects/flink/flink-docs-release-1.12/dev/python/table-api-users-guide/udfs/python_udfs.html
 
-@udf(input_types=[DataTypes.INT(), DataTypes.INT()], result_type=DataTypes.BIGINT())
+@udf(input_types=[DataTypes.INT(), DataTypes.INT()], result_type=DataTypes.BIGINT(), func_type="pandas")
 def add(i, j):
   return i + j
 
