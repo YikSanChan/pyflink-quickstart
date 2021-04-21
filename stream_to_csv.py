@@ -2,6 +2,8 @@ from pyflink.table import EnvironmentSettings, StreamTableEnvironment
 
 env_settings = EnvironmentSettings.new_instance().in_streaming_mode().use_blink_planner().build()
 table_env = StreamTableEnvironment.create(environment_settings=env_settings)
+table_env.get_config().get_configuration().set_string("parallelism.default", "1")
+table_env.get_config().get_configuration().set_string("execution.checkpointing.interval", "3s")
 
 table_env.execute_sql("""
     CREATE TABLE datagen (
@@ -20,7 +22,8 @@ table_env.execute_sql("""
     ) WITH (
         'connector' = 'filesystem',
         'format' = 'csv',
-        'path' = '/tmp/output'
+        'path' = '/tmp/output',
+        'sink.rolling-policy.rollover-interval' = '3s'
     )
 """)
 
