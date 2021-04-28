@@ -7,8 +7,6 @@ from pyflink.table.udf import udf
 
 @udf(input_types=[DataTypes.INT(), DataTypes.INT()], result_type=DataTypes.BIGINT(), func_type="pandas")
 def add(i, j):
-  import logging
-  logging.info(f"len(i)={len(i)}")
   return i + j
 
 env = StreamExecutionEnvironment.get_execution_environment()
