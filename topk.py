@@ -1,8 +1,7 @@
-from pyflink.datastream import StreamExecutionEnvironment
-from pyflink.table import StreamTableEnvironment
+from pyflink.table import BatchTableEnvironment, EnvironmentSettings
 
-env = StreamExecutionEnvironment.get_execution_environment()
-t_env = StreamTableEnvironment.create(env)
+env_settings = EnvironmentSettings.new_instance().in_batch_mode().use_blink_planner().build()
+t_env = BatchTableEnvironment.create(environment_settings=env_settings)
 
 source_ddl = """
 create table mySource (
