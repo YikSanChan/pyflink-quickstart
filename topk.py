@@ -8,7 +8,7 @@ source_ddl = """
 create table mySource (
     user_id bigint,
     item_id bigint,
-    event_time bigint
+    score bigint
 ) with (
     'connector' = 'filesystem',
     'format' = 'csv',
@@ -30,7 +30,7 @@ insert into mySink
 with top3 as (
     SELECT user_id, item_id
     FROM (
-        SELECT *, ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY event_time DESC) as row_num
+        SELECT *, ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY score DESC) as row_num
         FROM mySource
     )
     WHERE row_num <= 3
