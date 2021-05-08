@@ -20,7 +20,9 @@ create table mySink (
     user_id bigint,
     last_3_views string
 ) with (
-    'connector' = 'print'
+    'connector' = 'filesystem',
+    'format' = 'csv',
+    'path' = '/tmp/output_topk'
 )
 """
 
